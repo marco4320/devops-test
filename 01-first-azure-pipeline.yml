@@ -5,6 +5,7 @@
 
 trigger:
 - master
+- main  #  GitHub repos now default to main
 
 pool:
   vmImage: 'ubuntu-latest'
