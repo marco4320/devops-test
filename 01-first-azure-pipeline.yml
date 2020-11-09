@@ -12,7 +12,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 # Pipelines -> Stages -> Jobs -> Steps (Tasks)
-Jobs:
+jobs:
 - job: Job1
   steps:
   - script: echo Hello from Job1!
