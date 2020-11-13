@@ -33,7 +33,7 @@ stages:
         Contents: |
           **/*.yml
           **/*.tf
-        TargetFolder: '$(System.DefaultWorkingDirectory)'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
     - bash: ls -R $(Build.ArtifactStagingDirectory)
     - task: PublishBuildArtifacts@1
       inputs:
