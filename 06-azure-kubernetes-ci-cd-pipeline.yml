@@ -1,0 +1,67 @@
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  tag: 20   # hardcoded for now
+  #tag: '$(Build.BuildId)'
+
+stages:
+# Stage 1
+# Build Docker image (pipeline 04-build-and-push-docker-image)
+# Publish K8s files
+- stage: Build
+  displayName: Build image
+  jobs:  
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    # to save time, lets use an image that we have already built (hardcode the BuildId, too)
+    # - task: Docker@2
+    #   displayName: Build an image
+    #   inputs:
+    #     containerRegistry: 'mk2020id@DockerHub'
+    #     repository: 'mk2020id/currency-exchange-devops'
+    #     command: 'buildAndPush'
+    #     Dockerfile: '**/Dockerfile'
+    #     tags: '$(tag)'
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(System.DefaultWorkingDirectory)'
+        Contents: '**/*.yaml'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'manifests'
+        publishLocation: 'Container'
+
+# Stage 2
+# Get K8s configuration files
+# Deploy to K8s cluster
+- stage: Deploy
+  displayName: Deploy image
+  jobs:  
+  - job: Deploy
+    displayName: Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: DownloadBuildArtifacts@0
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'manifests'
+        itemPattern: '**/*.yaml'
+        downloadPath: '$(System.ArtifactsDirectory)'
+    - task: KubernetesManifest@0
+      inputs:
+        action: 'deploy'
+        kubernetesServiceConnection: 'azure-kubernetes-connection'
+        namespace: 'default'
+        manifests: '$(System.ArtifactsDirectory)/configuration/kubernetes/deployment.yaml'
+        containers: 'mk2020id/currency-exchange-devops:$(tag)'
