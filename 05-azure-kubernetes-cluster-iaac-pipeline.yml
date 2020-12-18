@@ -23,7 +23,7 @@ steps:
     ensureBackend: true
     backendAzureRmResourceGroupName: 'terraform-backend-rg'
     backendAzureRmResourceGroupLocation: 'westeurope'
-    backendAzureRmStorageAccountName: 'mymoksistorageaccount202012'
-    backendAzureRmContainerName: 'mymoksistorageaccountcontainer'
+    backendAzureRmStorageAccountName: 'moksistorageacct202012'
+    backendAzureRmContainerName: 'moksistorageacctcontainer'
     backendAzureRmKey: 'kubernetes-dev.tfstate'
     allowTelemetryCollection: false
