@@ -58,6 +58,12 @@ stages:
         artifactName: 'manifests'
         itemPattern: '**/*.yaml'
         downloadPath: '$(System.ArtifactsDirectory)'
+    # - task: DownloadPipelineArtifact@2
+    #   inputs:
+    #     buildType: 'current'
+    #     artifactName: 'manifests'
+    #     itemPattern: '**/*.yaml'
+    #     targetPath: '$(System.ArtifactsDirectory)'
     - task: KubernetesManifest@0
       inputs:
         action: 'deploy'
