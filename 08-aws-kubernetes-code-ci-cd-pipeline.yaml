@@ -53,11 +53,11 @@ stages:
         buildType: 'current'
         artifactName: 'manifests'
         itemPattern: '**/*.yaml'
-        targetPath: '$(System.Artifacts)'
+        targetPath: '$(System.ArtifactsDirectory)'
     - task: KubernetesManifest@0
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: 'aws-kubernetes-service-connection'
         namespace: 'default'
-        manifests: '$(System.Artifacts)/configuration/kubernetes/deployment.yaml'
+        manifests: '$(System.ArtifactsDirectory)/configuration/kubernetes/deployment.yaml'
         containers: 'mk2020id/currency-exchange-devops:$(tag)'
